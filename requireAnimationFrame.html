@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <title>requestAnimationFrame关键帧动画应用</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-touch-fullscreen" content="yes">
+  <meta name="full-screen" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="format-detection" content="address=no">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta name="viewport"
+    content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no">
+  <meta content="black" name="apple-mobile-web-app-status-bar-style">
+  <meta content="telephone=no" name="format-detection">
+  <style type="text/css">
+    * {
+      margin: 0;
+      padding: 0;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      overflow-x: hidden;
+      background: #fff;
+    }
+
+    body {
+      font-family: "微软雅黑, arial, sans-serif";
+      font-family: PingFangSC-Regular, sans-serif;
+    }
+
+    a {
+      -webkit-tap-highlight-color: transparent;
+      color: #000;
+    }
+
+    img {
+      border: none;
+    }
+
+    ul {
+      list-style: none;
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin: 0;
+    }
+
+    .clearfix:after {
+      content: "";
+      display: block;
+      clear: both;
+    }
+
+    em,
+    i,
+    b {
+      font-weight: normal;
+      font-style: normal;
+    }
+
+    .mengceng {
+      width: 100%;
+      position: fixed;
+      top: 0;
+      z-index: 999;
+      display: none;
+    }
+
+    .mengceng-pic {
+      width: 100%;
+    }
+
+    .wrapper {
+      position: relative;
+    }
+
+    .banner {
+      background: url(https://static.rong360.com/upload/png/fa/48/fa4806dd730ead7025348ebdba271c17.png) no-repeat center top;
+      background-size: contain;
+      height: 18.9rem;
+    }
+
+    .ui-block {
+      text-align: center;
+      box-sizing: border-box;
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      width: 100%;
+      padding-left: 1.4666666666666666rem;
+      padding-right: 1.4666666666666666rem;
+      padding-top: 8.5rem;
+    }
+
+    .ui-btn {
+      height: 2.1333333rem;
+      line-height: 2.1333333rem;
+      font-size: 0.96rem;
+      color: #3164cf;
+      text-align: center;
+      background: #fff;
+      width: 100%;
+      border-radius: 1.3rem;
+      font-weight: 500;
+      box-shadow: -2px -6px 10px #cfedff inset, 1px 7px 2px #689ff7;
+      -webkit-box-shadow: -2px -6px 10px #cfedff inset, 1px 7px 2px #689ff7;
+      -moz-box-shadow: -2px -6px 10px #cfedff inset, 1px 7px 2px #689ff7;
+      -webkit-appearance: none;
+      border: none;
+    }
+
+    .msg-box {
+      position: relative;
+      height: 2.9rem;
+      overflow: hidden;
+    }
+
+    .drop-btn {
+      width: 11.013333333333334rem;
+      height: 1.2266666666666666rem;
+      line-height: 1.2266666666666666rem;
+      border-radius: 1.3rem;
+      text-align: center;
+      border: 1px solid #588ef6;
+      color: #fff;
+      position: absolute;
+      overflow: hidden;
+      left: 8rem;
+      top: 3.2rem;
+      font-size: 0.5333333333333333rem;
+      background: rgba(78, 118, 250, 0.2);
+      animation: gogogo 5s 0s infinite ease;
+      -webkit-animation: gogogo 5s 0s infinite ease;
+
+    }
+
+    @-webkit-keyframes gogogo {
+      0% {
+        top: -1.2rem;
+        opacity: 0;
+      }
+
+      20%,
+      80% {
+        top: 1.1rem;
+        opacity: 1;
+      }
+
+      90% {
+        opacity: 0;
+      }
+
+      100% {
+        top: 2.4rem;
+        opacity: 0;
+      }
+    }
+
+    @keyframes gogogo {
+      0% {
+        top: -1.2rem;
+        opacity: 0;
+      }
+
+      20%,
+      80% {
+        top: 1.1rem;
+        opacity: 1;
+      }
+
+      90% {
+        opacity: 0;
+      }
+
+      100% {
+        top: 2.4rem;
+        opacity: 0;
+      }
+    }
+
+    .product-title {
+      font-size: 0.6933333333333334rem;
+      border-left: 1px solid #689ff7;
+      line-height: 0.69rem;
+      padding-left: 0.3rem;
+      margin-left: 1rem;
+      color: #777777;
+    }
+
+    .product-list {
+      position: relative;
+      height: 10rem;
+      margin-top: 0.5rem;
+    }
+
+    .first,
+    .second,
+    .third,
+    .four,
+    .five {
+      position: absolute;
+      top: 0rem;
+      left: 50%;
+      -webkit-animation: down 9s linear;
+      animation: down 9s linear;
+    }
+
+    .first {
+      margin-left: 2.034666666666667rem;
+      font-size: 0.7466666666666667rem;
+      color: #999;
+    }
+
+    .second {
+      margin-left: -5.066666666666666rem;
+      font-size: 0.5866666666666667rem;
+      color: #999999;
+    }
+
+    .third {
+      margin-left: -0.5066666666666667rem;
+      font-size: 0.8533333333333334rem;
+      color: #555;
+    }
+
+    .four {
+      margin-left: -7.925333333333333rem;
+      font-size: 0.6933333333333334rem;
+      color: #AEAEAE;
+    }
+
+    .five {
+      margin-left: -7.365333333333333rem;
+      font-size: 0.96rem;
+      color: #555;
+    }
+
+    @keyframes down {
+      0% {
+        transform: scale(0.8, 0.8);
+        top: 0.5rem;
+        opacity: 0;
+      }
+
+      12% {
+        opacity: 1;
+      }
+
+      35% {
+        transform: scale(1, 1);
+      }
+
+      65% {
+        transform: scale(1, 1);
+      }
+
+      88% {
+        opacity: 1;
+      }
+
+      100% {
+        transform: scale(0.8, 0.8);
+        top: 8rem;
+        opacity: 0;
+      }
+    }
+
+    @-webkit-keyframes down {
+      0% {
+        transform: scale(0.8, 0.8);
+        top: 0.5rem;
+        opacity: 0;
+      }
+
+      12% {
+        opacity: 1;
+      }
+
+      35% {
+        transform: scale(1, 1);
+      }
+
+      65% {
+        transform: scale(1, 1);
+      }
+
+      88% {
+        opacity: 1;
+      }
+
+      100% {
+        transform: scale(0.8, 0.8);
+        top: 8rem;
+        opacity: 0;
+      }
+    }
+
+    .second .productWrap {
+      transform: translate(0rem, 0.25rem);
+      -webkit-transform: translate(0rem, 0.25rem);
+    }
+
+    .third .productWrap {
+      transform: translate(0rem, -0.3rem);
+      -webkit-transform: translate(0rem, -0.3rem);
+    }
+
+    .four .productWrap {
+      transform: translate(0rem, 0.75rem);
+      -webkit-transform: translate(0rem, 0.75rem);
+    }
+
+    .five .productWrap {
+      transform: translate(-0.2rem, -0.3rem);
+      -webkit-transform: translate(-0.2rem, -0.3rem);
+    }
+
+    .bottom {
+      font-size: .64rem;
+      color: #999;
+      text-align: center;
+      height: 2.866667rem;
+      line-height: 1.066667rem;
+    }
+  </style>
+
+<body>
+  <div class="wrapper">
+    <div class="mengceng">
+      <img src="//static.rong360.com/upload/png/13/9f/139f66d350734f4c9b363d994dfd0d59.png" alt=""
+        class="mengceng-pic" />
+    </div>
+    <div class="banner">
+      <div class="msg-box">
+        <div class="drop-btn">上海蒋x成功借款工薪贷3万元</div>
+      </div>
+      <div class="ui-block">
+        <input type="button" class="ui-btn" value="下载APP立即查询">
+      </div>
+    </div>
+    <div class="product-title">融360安全快速的贷款平台，88款贷款产品任你选</div>
+    <div class="product-list">
+      <div class="productItem first" style="-webkit-animation-delay: -7.8s">
+        <div class="productWrap">工薪贷·额度3万元</div>
+      </div>
+      <div class="productItem second" style="-webkit-animation-delay: -6.6s">
+        <div class="productWrap">用钱宝·额度1千元</div>
+      </div>
+      <div class="productItem third" style="-webkit-animation-delay: -5.4s">
+        <div class="productWrap">手机贷1万元</div>
+      </div>
+      <div class="productItem four" style="-webkit-animation-delay: -4.2s">
+        <div class="productWrap">信用钱包·额度1万元</div>
+      </div>
+      <div class="productItem five" style="-webkit-animation-delay: -3s">
+        <div class="productWrap">蓝领贷·额度1万元</div>
+      </div>
+      <div class="productItem first" style="-webkit-animation-delay: -1.8s">
+        <div class="productWrap">放款快至2小时到账</div>
+      </div>
+      <div class="productItem second" style="-webkit-animation-delay: -0.6s">
+        <div class="productWrap">功夫贷·额度3千元</div>
+      </div>
+    </div>
+    <div class="bottom">北京融世纪信息技术有限公司<br>京ICP证120036号</div>
+  </div>
+</body>
+<script type="text/javascript">
+  var oDrop = document.getElementsByTagName('input')[0];
+  (function () { var rem, dpr, time, doc = window.document, docEl = doc.documentElement, viewport = doc.querySelector('meta[name="viewport"]'), zoomScale, zoomScaleNum; if (viewport) { zoomScale = viewport.getAttribute("content").match(/initial\-scale=(["']?)([\d\.]+)\1?/); if (zoomScale) { zoomScaleNum = parseFloat(zoomScale[2]); dpr = parseInt(1 / zoomScaleNum) } } if (!dpr && !zoomScaleNum) { var os = (window.navigator.appVersion.match(/android/gi), window.navigator.appVersion.match(/iphone/gi)), dpr = window.devicePixelRatio; dpr = os ? dpr >= 3 ? 3 : dpr >= 2 ? 2 : 1 : 1; zoomScaleNum = 1 / dpr } window.addEventListener("resize", function () { clearTimeout(time); time = setTimeout(changeRem, 300) }, false); function changeRem() { var docWidth = docEl.getBoundingClientRect().width; if (docWidth / dpr > 540) { docWidth = 540 * dpr } rem = docWidth / 320 * 16; docEl.style.fontSize = rem + "px" } changeRem() })();
+</script>
+<script type="text/javascript" src="https://m.rong360.com/static/rongui/js/zepto.min.js?t=9"></script>
+<script type="text/javascript">
+  function getTime() {
+    var myDate = new Date(),
+      year = myDate.getFullYear(),
+      month = myDate.getMonth() + 1,
+      date = myDate.getDate();
+    return year + "/" + (month < 10 ? "0" + month : month) + "/" + (date < 10 ? "0" + date : date);
+  }
+
+  function getParameterByName(name) {
+    name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+    var regexString = "[\\?&]" + name + "=([^&#]*)";
+    var regex = new RegExp(regexString);
+    var found = regex.exec(window.location.search);
+    if (found == null)
+      return "";
+    else
+      return decodeURIComponent(found[1].replace(/\+/g, " "));
+  }
+
+  //顶部动画出现
+  var alertArr = ['上海蒋x成功借款工薪贷3万元', '重庆孔xx成功借款用钱宝1千元', '合肥李x成功借款手机贷1万元', '毫州柏xx成功借款信用钱包1万元', '福州赵xx成功借款蓝领贷1万元', '厦门鲁xx成功借款功夫贷3千元', '南宁酆x成功借款现金白卡1千元', '贺州滕xx成功借款美借1千元', '贵阳皮x成功借款快贷极速贷4千元', '安顺张x成功借款51短期贷1千元', '大庆和xx成功借款钱包贷1千元', '三亚卫x成功借款易分期1千元', '武汉樊xx成功借款现金借款1千元', '荆门傅x成功借款秒白条1千元', '长沙柳x成功借款快金1千元', '郴州米xx成功借款快速借款500元', '南京黄x成功借款秒啦1千元', '无锡熊x成功借款南瓜快贷1千元', '南昌李xx成功借款嘉薪贷3千元', '赣州席xx成功借款好钱包1千元', '成都梅x成功借款闪电周转500元', '广安经xx成功借款水象分期500元', '昆明喻x成功借款小意思1千元', '玉溪郎xx成功借款现金借款2千元', '大连曹xx杭州汤x成功借款工薪贷3万元', '宁波狄xx成功借款用钱宝1千元', '天津庞x成功借款手机贷1万元', '北京刘xx成功借款信用钱包1万元', '洛阳沈x兰州郭xx成功借款蓝领贷1万元', '白银田x成功借款功夫贷3千元', '保定邓x成功借款现金白卡1千元', '石家庄莫xx成功借款美借1千元', '郑州钱xx成功借款快贷极速贷4千元', '哈尔滨水x成功借款51短期贷1千元', '伊春韦xx成功借款钱包贷1千元', '长春鲍xx成功借款易分期1千元', '葫芦岛穆xx成功借款现金借款1千元', '呼和浩特贝x成功借款秒白条1千元', '银川纪x成功借款快金1千元', '西宁季xx成功借款快速借款500元', '温州盛xx成功借款秒啦1千元', '吉林殷xx成功借款南瓜快贷1千元', '沈阳卞x成功借款嘉薪贷3千元', '格尔木胡x成功借款好钱包1千元', '呼伦贝尔房xx成功借款闪电周转500元', '济南施x成功借款水象分期500元', '太原邹xx成功借款小意思1千元', '北京李xx成功借款现金借款2千元', '杭州刘xx成功借款嘉薪贷3千元', '厦门张xx成功借款好钱包1千元'];
+  var inow = 0;
+  $(".drop-btn").on("webkitAnimationIteration animationIteration", function () { //动画重复运动时的事件
+    inow++;
+    inow = inow % 50;
+    this.innerHTML = alertArr[inow];
+  }, false);
+
+  //底部动画
+  var classArr = ['first', 'second', 'third', 'four', 'five'];
+  var productArr = ['现金白卡·额度1千元', '美借·额度1千元', '快贷极速贷·额度4千元', '51短期贷·额度1千元', '申请只需要3步', '钱包贷·额度1千元', '易分期·额度1千元', '现金借款·额度100元', '秒白条·额度1千元', '快金·额度1千元', '利率低至0.3%/天', '快速借款·额度500元', '秒啦·额度1千元', '南瓜快贷·额度1千元', '嘉薪贷·额度3千元', '好钱包·额度1千元', '88款产品任你选', '闪电周转·额度500元', '水象分期·额度500元', '小意思·额度1千元', '现金借款·额度2千元', '用钱宝·额度1千元', '无抵押0担保']
+
+  var count = 0;
+  var classIndex = 2;
+  var productIndex = 0;
+  var animationDelay = 9;
+  var timer = null;
+
+  $(".productItem").on("webkitAnimationEnd animationend", function () {
+    $(this).remove()
+  }, false);
+
+  function createProductItem(className, text, objCss) {
+    var productItem = document.createElement('div');
+    productItem.className = 'productItem' + ' ' + className;
+    productItem.innerHTML = '<div class="productWrap">' + text + '</div>';
+    $(productItem).css(objCss).on("webkitAnimationEnd animationend", function () {
+      $(this).remove()
+    }, false);
+    return productItem;
+  }
+
+  window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+
+  var lastTimeStamp = null;
+  var subTimeStamp = null;
+
+  function req(timeStamp) {
+    if (lastTimeStamp == null) {
+      lastTimeStamp = timeStamp;
+    }
+    subTimeStamp = timeStamp - lastTimeStamp;
+
+    if (subTimeStamp >= 1200) {
+      var classInow = classIndex % classArr.length;
+      var productInow = productIndex % productArr.length;
+      var productItem = createProductItem(classArr[classInow], productArr[productInow], {});
+      $(".product-list").append(productItem);
+      classIndex++;
+      productIndex++;
+      lastTimeStamp = timeStamp;
+    }
+    requestAnimationFrame(arguments.callee);
+  }
+  requestAnimationFrame(req);
+
+  $(window).on("blur", function () {
+    $(".product-item").css({ animationPlayState: "paused" });
+  });
+  $(window).on("focus", function () {
+    $(".product-item").css({ animationPlayState: "running" });
+  });
+</script>
+</script>
+
+</html>
